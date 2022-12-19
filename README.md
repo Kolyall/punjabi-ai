@@ -45,7 +45,7 @@ A Python program to create a GUI that takes a user's question in English, uses O
 4.  Connect the read-aloud button to a function to use the NaraKeet API to create an audio file of the translated Punjabi answer.
 5.  Output the answer to the GUI and play the audio file.
 
-### Resource:
+### Resources:
 
 1. YouTube:
 
