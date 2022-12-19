@@ -14,6 +14,7 @@ A Python program to create a GUI that takes a user's question in English, uses O
 
 ### Libraries:
 
+- google-cloud-speech
 - googletrans
 - openai
 - PyQt5
