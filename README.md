@@ -10,7 +10,7 @@ A Python program to create a GUI that takes a user's question in English, uses O
 ### Requirements:
 
 - [OPENAI API key](https://beta.openai.com/account/api-keys)
-- [Narakeet API key
+- Narakeet API key
 
 ### Libraries:
 
