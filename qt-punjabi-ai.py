@@ -1,12 +1,23 @@
-import sys
-import openai
-import googletrans
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
+# import the necessary modules
 import pyaudio
-import time
 import wave
 
+# OpenAI API Keys
+import openai
+openai.api_key = "YOUR_OPENAI_API_KEY"
+
+# Google Cloud Speech-to-Text API
+from google.cloud import speech_v1p1beta1 as speech
+from google.cloud.speech_v1p1beta1 import enums
+from google.cloud.speech_v1p1beta1 import types
+
+# PyQt5 GUI
+from PyQt5.QtWidgets import *
+
+# Other libraries
+import googletrans
+import sys
+import io
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
@@ -15,8 +26,8 @@ CHUNK = 1024
 RECORD_SECONDS = 10
 WAVE_OUTPUT_FILENAME = "input.wav"
 
-# OpenAI API Keys
-openai.api_key = "YOUR_OPENAI_API_KEY"
+# Set up the Speech-to-Text client
+client = speech.SpeechClient()
 
 # Create GUI
 app = QApplication(sys.argv)
@@ -24,6 +35,36 @@ window = QWidget()
 window.setWindowTitle('ਪੰਜਾਬੀ ਏ.ਆਈ.')
 window.setGeometry(400, 300, 400, 300)
 
+def transcribe_audio():
+    # set up the Speech-to-Text client
+    client = speech.SpeechClient()
+
+    # specify the audio file and language
+    file_name = 'input.mp3'
+    language_code = 'pa-IN' # Punjabi language code
+
+    # read the audio file into memory
+    with io.open(file_name, 'rb') as audio_file:
+        content = audio_file.read()
+        audio = types.RecognitionAudio(content=content)
+
+    # set the configuration for the request
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code=language_code
+    )
+
+    # send the request and get the response
+    response = client.recognize(config, audio)
+
+    # print the transcribed text
+    for result in response.results:
+        print(result.alternatives[0].transcript)
+        
+    # update the input field with the translated text
+    question.setText(translated_text)
+    
 # Record button
 def record():
     audio = pyaudio.PyAudio()
@@ -60,6 +101,9 @@ def record():
     waveFile.setframerate(RATE)
     waveFile.writeframes(b''.join(frames))
     waveFile.close()
+    
+    # transcribe the audio and update the input field
+    transcribe_audio()
 
 
 btn = QPushButton(window)
